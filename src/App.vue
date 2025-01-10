@@ -1,32 +1,35 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <NavBar :titles="[ {text: 'Viruses', color: 'red'} , {text: 'Compte bancaire', color: 'white'}, {text:'Login', color:'blue'}]"/>
+    <img alt="Vue logo" src="./assets/logo.png">
+    <h1>Welcome to DrMad app</h1>
+
+    <CheckedList :data='[{nom:"dupond", prenom:"jean",age:31}, {nom:"durand", prenom:"pierre",age:35} ]' :fields="[ 'prenom', 'nom' ] " :checked="[true, false]" :itemCheck="true" :itemButton="{'show':true, 'text':'du text'}" :listButton="{'show':true, 'text':'du text2'}"></CheckedList>
+
+    <router-view></router-view>
   </div>
+
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
 
-nav {
-  padding: 30px;
-}
+import {mapActions} from 'vuex'
+import NavBar from "@/components/navbar.vue";
+import CheckedList from "@/components/checkedList.vue";
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  name: 'App',
+  components: {CheckedList, NavBar},
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+  data: () => ({
+    //
+  }),
+  methods: {
+    ...mapActions(['getAllViruses'])
+  },
+  mounted() {
+    this.getAllViruses();
+
+  }
+};
+</script>
