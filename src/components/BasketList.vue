@@ -1,80 +1,87 @@
 <template>
-  <div>
-    <h2>Votre Panier</h2>
+  <div class="basket-container">
+    <h2>Panier</h2>
     <CheckedList
-        v-if="basket.items.length > 0"
-        :data="basket.items"
-        :fields="['item.name', 'item.price', 'amount']"
+        :data="basket"
+        :fields="['name', 'price']"
+        :itemCheck="false"
         :itemButton="{ show: true, text: 'Supprimer' }"
         :listButton="{ show: true, text: 'Vider le panier' }"
-        @item-button-clicked="removeItem"
-        @list-button-clicked="clearBasket"
+        @item-button-clicked="handleRemoveItem"
+        @list-button-clicked="handleClearBasket"
     />
-    <p v-else>Votre panier est vide.</p>
-
-    <button v-if="basket.items.length > 0" @click="validateOrder">Acheter</button>
+    <button
+        class="buy-button"
+        :disabled="!basket.length"
+        @click="createOrder"
+    >
+      Acheter
+    </button>
   </div>
 </template>
 
 <script>
-import CheckedList from './checkedList.vue';
-import ShopService from '../services/shop.service';
 import { mapState, mapActions } from 'vuex';
+import CheckedList from './checkedList.vue';
+import ShopService from '@/services/shop.service';
 
 export default {
   name: 'BasketList',
-  components: { CheckedList },
+  components: {
+    CheckedList
+  },
   computed: {
-    ...mapState('shop', ['basket']),
-    ...mapState("bank", ['shopUser', "loginError"])
+    ...mapState('shop', ['basket', 'shopUser']),
   },
   methods: {
-    ...mapActions('shop', ['getBasket', 'removeItemFromBasket', 'clearBasket']),
+    ...mapActions('shop', ['loadBasket', 'removeItem', 'clearBasket']),
 
-    async removeItem(index) {
-      let itemId = this.basket.items[index].item._id;
-      await this.removeItemFromBasket(itemId);
+    async createOrder() {
+      if (!this.shopUser || !this.basket.length) return;
+      const orderData = { items: this.basket };
+      const response = await ShopService.createOrder(this.shopUser._id, orderData);
+      if (response.error === 0 && response.data.uuid) {
+        await this.clearBasket();
+        await this.$router.push(`/shop/pay/${response.data.uuid}`);
+      }
     },
 
-    async clearBasket() {
+    async handleRemoveItem(index) {
+      // Supprimer un item via son index dans le tableau
+      const itemId = this.basket[index]._id;
+      await this.removeItem(itemId);
+    },
+
+    async handleClearBasket() {
+      // Vider le panier
       await this.clearBasket();
     },
-
-    async validateOrder() {
-      let order = {
-        items: this.basket.items.map(item => ({
-          item: {
-            name: item.item.name,
-            description: item.item.description,
-            price: item.item.price,
-            promotion: item.item.promotion,
-            object: item.item.object
-          },
-          amount: item.amount
-        }))
-      };
-
-      let response = await ShopService.createOrder(order);
-      if (response.error === 0) {
-        let uuid = response.data.uuid;
-        await this.clearBasket();
-        this.$router.push(`/shop/pay/${uuid}`);
-      } else {
-        console.error('Erreur lors de la validation de la commande');
-      }
-    }
   },
-  mounted() {
-    this.getBasket();
+  created() {
+    this.loadBasket();
   }
-};
+}
 </script>
 
 <style scoped>
-h2 {
-  margin-bottom: 20px;
+.basket-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
 }
-button {
-  margin-top: 10px;
+
+.buy-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buy-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 </style>
