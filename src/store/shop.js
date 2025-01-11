@@ -1,5 +1,4 @@
 import ShopService from '../services/shop.service'
-import router from "@/router";
 
 export default {
     namespaced: true,
@@ -18,10 +17,10 @@ export default {
             state.basket = basket
     },
         updateShopUser(state, user) {
-            state.shopUser = user
+            state.shopUser = user;
         },
         updateLoginError(state, error){
-            state.loginError = error
+            state.loginError = error;
         },
     },
 
@@ -39,9 +38,9 @@ export default {
         async shopLogin({commit}, data) {
             let response = await ShopService.shopLogin(data)
             if (response.error === 0) {
-                commit('updateShopUser', response.data)
-                commit('updateLoginError', '')
-                await router.push('/shop/buy')
+                await commit('updateShopUser', response.data)
+                await commit('updateLoginError', '')
+                return response.data
             }
             else {
                 commit('updateLoginError', response.data)

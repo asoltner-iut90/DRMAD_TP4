@@ -14,6 +14,8 @@
 <script>
 
 import {mapState, mapActions} from 'vuex'
+import router from "@/router";
+
 export default {
   name: 'ShopLoginView',
   data: () => ({
@@ -27,7 +29,10 @@ export default {
   methods: {
     ...mapActions("shop",['shopLogin']),
     logIn(params){
-      this.shopLogin(params)
+      this.shopLogin(params);
+      if(this.shopUser){
+        router.push("/shop/buy");
+      }
     }
   }
 }
