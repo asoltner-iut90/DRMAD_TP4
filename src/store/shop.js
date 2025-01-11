@@ -50,8 +50,7 @@ export default {
 
         async getBasket({ commit, state }) {
             console.log('Récupération du panier');
-            console.log(this.shopUser);
-            let response = await ShopService.getBasket({ id: state.shopUser });
+            let response = await ShopService.getBasket({ id: state.shopUser._id});
             if (response.error === 0) {
                 commit('updateBasket', response.data);
             } else {
@@ -61,22 +60,22 @@ export default {
         async addItemToBasket({ commit, state }, newItem) {
             commit('addItemToBasket', newItem);
             // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser, basket: state.basket });
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
         },
         async removeItemFromBasket({ commit, state }, itemId) {
             commit('removeItemFromBasket', itemId);
             // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser, basket: state.basket });
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
         },
         async decrementItemAmount({ commit, state }, itemId) {
             commit('decrementItemAmount', itemId);
             // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser, basket: state.basket });
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
         },
         async clearBasket({ commit, state }) {
             commit('clearBasket');
             // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser, basket: state.basket });
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
         }
     }
 }
