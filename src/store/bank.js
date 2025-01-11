@@ -1,15 +1,11 @@
 import BankService from "@/services/bankaccount.service";
-import ShopService from "@/services/shop.service";
-import router from "@/router";
 
 export default {
     namespaced: true,
     state: {
-        shopUser: null,
         accountAmount: 0,
         accountTransactions: [],
         accountNumberError :0,
-        loginError: '',
     },
 
     mutations:{
@@ -22,12 +18,7 @@ export default {
         updateAccountNumberError(state, error){
             state.accountNumberError = error
         },
-        updateShopUser(state, user) {
-            state.shopUser = user
-        },
-        updateLoginError(state, error){
-            state.loginError = error
-        },
+
     },
 
     // actions = fonctions asynchrone pour mettre à jour le state, en faisant appel aux mutations, via la fonction commit()
@@ -55,16 +46,5 @@ export default {
             }
         },
 
-        async shopLogin({commit}, data) {
-            let response = await ShopService.shopLogin(data)
-            if (response.error === 0) {
-                commit('updateShopUser', response.data)
-                commit('updateLoginError', '')
-                await router.push('/shop/buy')
-            }
-            else {
-                commit('updateLoginError', response.data)
-            }
-        }
     }
 }

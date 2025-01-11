@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs'
 
 function getBasket(data) {
   let id = data.id;
+  console.log('getBasket', data)
   let user = shopusers.find(e => e._id === id)
   if (!user) return {error: 1, status: 404, data: 'user id invalid'}
   return {error: 0, status: 200, data: user.basket}

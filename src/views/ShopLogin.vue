@@ -22,10 +22,10 @@ export default {
     error: ''
   }),
   computed: {
-    ...mapState("bank", ['shopUser', "loginError"])
+    ...mapState("shop",['shopUser', "loginError"])
   },
   methods: {
-    ...mapActions("bank", ['shopLogin']),
+    ...mapActions("shop",['shopLogin']),
     logIn(params){
       this.shopLogin(params)
     }
