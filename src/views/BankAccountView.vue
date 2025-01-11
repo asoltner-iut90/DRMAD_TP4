@@ -22,11 +22,11 @@ export default {
     accountNumber: '',
   }),
   computed: {
-    ...mapState(['accountAmount', "accountTransactions", "accountNumberError"])
+    ...mapState('bank', ['accountAmount', "accountTransactions", "accountNumberError"])
   },
   methods: {
-    ...mapActions(['getAccountAmount', "getAccountTransactions"]),
-    ...mapMutations(['updateAccountNumberError']),
+    ...mapActions("bank",['getAccountAmount', "getAccountTransactions"]),
+    ...mapMutations("bank",['updateAccountNumberError']),
     transformation(dateString){
       let date = new Date(dateString);
       let month = date.getMonth() + 1;

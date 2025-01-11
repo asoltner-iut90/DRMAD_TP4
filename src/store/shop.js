@@ -48,7 +48,7 @@ export default {
             }
         },
 
-        async getBasket({ commit },state) {
+        async getBasket({ commit, state }) {
             console.log('Récupération du panier');
             console.log(this.shopUser);
             let response = await ShopService.getBasket({ id: state.shopUser });

@@ -25,8 +25,7 @@ export default {
   name: 'BasketList',
   components: { CheckedList },
   computed: {
-    ...mapState('shop', ['basket']),
-    ...mapState("bank", ['shopUser', "loginError"])
+    ...mapState('shop', ['basket','shopUser', "loginError"]),
   },
   methods: {
     ...mapActions('shop', ['getBasket', 'removeItemFromBasket', 'clearBasket']),

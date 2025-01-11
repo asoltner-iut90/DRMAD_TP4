@@ -56,7 +56,7 @@ export default {
     selectedViruses: [],
   }),
   computed: {
-    ...mapState(['viruses']),
+    ...mapState("shop",['viruses']),
   },
   methods:{
     computedFilter(){

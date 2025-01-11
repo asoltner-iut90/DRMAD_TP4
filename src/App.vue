@@ -25,11 +25,10 @@ export default {
     //
   }),
   methods: {
-    ...mapActions(['getAllViruses'])
+    ...mapActions('shop',['getAllViruses'])
   },
   mounted() {
     this.getAllViruses();
-
   }
 };
 </script>
