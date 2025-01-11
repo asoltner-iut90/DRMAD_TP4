@@ -75,7 +75,12 @@ async function updateBasket(data) {
 
 async function payOrder(data) {
     let response = null;
-    LocalSource.payOrder(data)
+    try{
+        response = await LocalSource.payOrder(data)
+    }
+    catch(err) {
+        response = {error: 1, status:404, data:"erreur de réseau"}
+    }
     return response
 }
 

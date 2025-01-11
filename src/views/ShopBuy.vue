@@ -1,6 +1,6 @@
 <template>
   <div class="shop-buy">
-    <ItemsList />
+    <ItemsList/>
     <BasketList />
   </div>
 </template>

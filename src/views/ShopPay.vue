@@ -1,10 +1,8 @@
 <template>
   <div class="shop-pay">
       <h1>Paiement</h1>
-      <form>
-        <input v-model="currentOrderId" required />
-        <button @click="payOrder">Payer</button>
-      </form>
+      <input v-model="currentOrderId" required />
+      <button @click="payOrder">Payer</button>
       <p v-if="error">{{error}}</p>
   </div>
 </template>
@@ -13,9 +11,12 @@
 
 import ShopService from "@/services/shop.service";
 import {mapState} from "vuex";
+import router from "@/router";
 
 export default {
-  ...mapState('bank', ['shopUser']),
+  computed: {
+    ...mapState('shop', ['shopUser']),
+  },
   name: 'ShopPay',
   props: {
     orderId: String,
@@ -28,18 +29,16 @@ export default {
   },
   methods:{
     async payOrder(){
-      let data = {orderId: this.orderId, userId: this.shopUser.id};
-      let result = ShopService.payOrder(data);
-      if(!result.success){
-        this.error = result.message;
+      let data = {orderId: this.currentOrderId, userId: this.shopUser._id};
+      let result = await ShopService.payOrder(data);
+      if(result.error){
+        this.error = result.data;
         return;
       }
-      this.router.push({ path: "/shop/orders" });
+      this.error = '';
+      router.push("/shop/orders");
     }
   },
-  mounted() {
-    ShopService.payOrder({userId: '66d58122c08b4d64db14cd04', orderId:'66d58122c08b4d64db14cd05'})
-  }
 }
 
 </script>

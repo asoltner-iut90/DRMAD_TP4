@@ -20,10 +20,6 @@ import CheckedList from "@/components/checkedList.vue";
 export default {
   name: 'App',
   components: {CheckedList, NavBar},
-
-  data: () => ({
-    //
-  }),
   methods: {
     ...mapActions('shop',['getAllViruses'])
   },
