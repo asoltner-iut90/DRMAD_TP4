@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 import CheckedList from './checkedList.vue';
-import ShopService from '@/services/shop.service';
+import ShopService from '../services/shop.service';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'BasketList',
@@ -31,7 +31,7 @@ export default {
     CheckedList
   },
   computed: {
-    ...mapState('shop', ['basket', 'shopUser']),
+    ...mapState('shop', ['basket','shopUser', "loginError"]),
   },
   methods: {
     ...mapActions('shop', ['getBasket', 'removeItem', 'clearBasket']),
