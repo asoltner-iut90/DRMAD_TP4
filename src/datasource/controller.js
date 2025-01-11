@@ -1,5 +1,6 @@
 import {items, shopusers, bankaccounts, transactions} from './data'
 import * as bcrypt from 'bcryptjs'
+const { v4: uuidv4 } = require('uuid');
 
 /* controllers: les fonctions ci-dessous doivent mimer ce que renvoie l'API en fonction des requêtes possibles.
 
@@ -75,7 +76,42 @@ function payOrder(data) {
   order.status = 'finalized'
   return {error: 0, status: 200, data: order}
 }
+async function createOrder(userId, orderData) {
+  const user = shopusers.find(u => u._id === userId);
+  if (!user) {
+    return { error: 1, message: "Utilisateur non trouvé" };
+  }
 
+  // Calculer le total de la commande (prix * quantité) + promotions
+  let total = 0;
+  orderData.items.forEach(({ item, amount }) => {
+    if (!item || !item.price) {
+      console.error("Item ou prix manquant:", item);
+      return;
+    }
+
+    let itemTotal = item.price * amount;
+    if (item.promotion && item.promotion.length > 0) {
+      item.promotion.forEach(promo => {
+        itemTotal -= promo.discount * promo.amount;
+      });
+    }
+    total += itemTotal;
+  });
+
+  const newOrder = {
+    items: orderData.items,
+    date: new Date(),
+    total,
+    status: 'waiting_payment',
+    uuid: uuidv4()
+  };
+  console.log('newOrder', newOrder, user, orderData.items);
+
+  user.orders.push(newOrder);
+
+  return { error: 0, data: { uuid: newOrder.uuid } };
+}
 
 
 export default{
@@ -86,5 +122,6 @@ export default{
   updateBasket,
   getBasket,
   payOrder,
+  createOrder,
 }
 

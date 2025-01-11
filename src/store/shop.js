@@ -6,22 +6,22 @@ export default {
     state: {
         shopUser: null,
         viruses: [],
-        basket:[],
+        basket: [],
         loginError: '',
     },
 
-    mutations:{
+    mutations: {
         updateViruses(state, viruses) {
-            state.viruses = viruses
+            state.viruses = viruses;
         },
         updateBasket(state, basket) {
-            state.basket = basket
-    },
-        updateShopUser(state, user) {
-            state.shopUser = user
+            state.basket = basket;
         },
-        updateLoginError(state, error){
-            state.loginError = error
+        updateShopUser(state, user) {
+            state.shopUser = user;
+        },
+        updateLoginError(state, error) {
+            state.loginError = error;
         },
     },
 
@@ -36,47 +36,71 @@ export default {
             }
         },
 
-        async shopLogin({commit}, data) {
-            let response = await ShopService.shopLogin(data)
+        async shopLogin({ commit }, data) {
+            let response = await ShopService.shopLogin(data);
             if (response.error === 0) {
-                commit('updateShopUser', response.data)
-                commit('updateLoginError', '')
-                await router.push('/shop/buy')
-            }
-            else {
-                commit('updateLoginError', response.data)
+                commit('updateShopUser', response.data);
+                commit('updateLoginError', '');
+                await router.push('/shop/buy');
+            } else {
+                commit('updateLoginError', response.data);
             }
         },
 
         async getBasket({ commit, state }) {
             console.log('Récupération du panier');
-            let response = await ShopService.getBasket({ id: state.shopUser._id});
+            let response = await ShopService.getBasket({ id: state.shopUser._id });
             if (response.error === 0) {
                 commit('updateBasket', response.data);
             } else {
                 console.log(response.data);
             }
         },
+
         async addItemToBasket({ commit, state }, newItem) {
-            commit('addItemToBasket', newItem);
-            // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
+            console.log('Ajout d\'un item au panier :', newItem);
+            const updatedBasket = Array.isArray(state.basket) ? [...state.basket] : [];  // Assure que c'est un tableau
+            const existingItemIndex = updatedBasket.findIndex(b => b.item._id === newItem.item._id);
+
+            if (existingItemIndex !== -1) {
+                updatedBasket[existingItemIndex].amount += newItem.amount;
+            } else {
+                updatedBasket.push(newItem);
+                console.log(state.basket);
+            }
+
+            commit('updateBasket', updatedBasket);
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: updatedBasket });
         },
+
         async removeItemFromBasket({ commit, state }, itemId) {
-            commit('removeItemFromBasket', itemId);
-            // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
+            const updatedBasket = state.basket.filter(b => b.item._id !== itemId);
+            commit('updateBasket', updatedBasket);
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: updatedBasket });
         },
-        async decrementItemAmount({ commit, state }, itemId) {
-            commit('decrementItemAmount', itemId);
-            // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
+
+        async incredecrementItemAmount({ commit, state }, { itemId, nombre }) {
+            const updatedBasket = [...state.basket];
+            const itemIndex = updatedBasket.findIndex(b => b.item._id === itemId);
+
+            if (itemIndex !== -1) {
+                updatedBasket[itemIndex].amount += nombre;
+
+                if (updatedBasket[itemIndex].amount <= 0) {
+                    updatedBasket.splice(itemIndex, 1); // Supprimer l'item si quantité <= 0
+                }
+
+                commit('updateBasket', updatedBasket);
+            }
         },
+
         async clearBasket({ commit, state }) {
-            commit('clearBasket');
-            // Mettre à jour la source locale via ShopService
-            await ShopService.updateBasket({ id: state.shopUser._id, basket: state.basket });
-        }
+            const emptyBasket = [];
+            commit('updateBasket', emptyBasket);
+            await ShopService.updateBasket({ id: state.shopUser._id, basket: emptyBasket });
+        },
+
     }
 }
+
 
