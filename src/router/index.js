@@ -33,6 +33,11 @@ const routes = [
   },
   {
     path: '/shop/pay/:orderId',
+    name: 'pay_order_id',
+    component: ShopPay,
+  },
+  {
+    path: '/shop/pay',
     name: 'pay',
     component: ShopPay,
   },

@@ -2,7 +2,6 @@
   <div>
     <p>Navbar</p>
     <button v-for="(e, index) in titles" :key=index :color="e.color" @click="handleMenuClicked(index)" name="btn-menu">{{e.text}} </button>
-
   </div>
 </template>
 
@@ -21,6 +20,8 @@ export default {
         router.push("/bank/account").catch(()=>{})
       }else if(index == 2){
         router.push("/shop/login").catch(()=>{})
+      }else if(index == 3){
+        router.push("/shop/pay").catch(()=>{})
       }
     }
   },

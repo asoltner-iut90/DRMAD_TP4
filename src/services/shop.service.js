@@ -73,9 +73,16 @@ async function updateBasket(data) {
     return response
 }
 
+async function payOrder(data) {
+    let response = null;
+    LocalSource.payOrder(data)
+    return response
+}
+
 export default {
     shopLogin,
     getAllViruses,
     getBasket,
-    updateBasket
+    updateBasket,
+    payOrder,
 }

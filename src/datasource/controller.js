@@ -64,6 +64,18 @@ function getAccountTransactions(number){
   return {error: 0, status: 404, data:list};
 }
 
+function payOrder(data) {
+  let orderId = data.orderId;
+  let userId = data.userId;
+  if(!orderId) return {error: 1, status: 404, data: 'orderId invalid'}
+  if(!userId) return {error: 1, status: 404, data: 'user id invalid'}
+  let user = shopusers.find(e => e._id === userId);
+  if (!user) return {error: 1, status: 404, data: 'user id invalid'}
+  let order = user.orders.find(e => e._id === orderId);
+  order.status = 'finalized'
+  return {error: 0, status: 200, data: order}
+}
+
 
 
 export default{
@@ -72,6 +84,7 @@ export default{
   getAccountAmount,
   getAccountTransactions,
   updateBasket,
-  getBasket
+  getBasket,
+  payOrder,
 }
 
