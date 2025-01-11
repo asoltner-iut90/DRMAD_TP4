@@ -12,7 +12,6 @@ const { v4: uuidv4 } = require('uuid');
 
 function getBasket(data) {
   let id = data.id;
-  console.log('getBasket', data)
   let user = shopusers.find(e => e._id === id)
   if (!user) return {error: 1, status: 404, data: 'user id invalid'}
   return {error: 0, status: 200, data: user.basket}
@@ -82,7 +81,6 @@ async function createOrder(userId, orderData) {
     return { error: 1, message: "Utilisateur non trouvé" };
   }
 
-  // Calculer le total de la commande (prix * quantité) + promotions
   let total = 0;
   orderData.items.forEach(({ item, amount }) => {
     if (!item || !item.price) {
@@ -106,7 +104,6 @@ async function createOrder(userId, orderData) {
     status: 'waiting_payment',
     uuid: uuidv4()
   };
-  console.log('newOrder', newOrder, user, orderData.items);
 
   user.orders.push(newOrder);
 

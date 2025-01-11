@@ -45,11 +45,8 @@ export default {
 
       const orderData = { items: this.basket };
 
-      console.log("Données envoyées à l'API:", orderData); // Log les données envoyées à l'API
 
       const response = await ShopService.CreateOrder(this.shopUser._id, orderData);
-
-      console.log("Réponse de l'API:", response); // Log la réponse complète de l'API
 
       if (response.error === 0 && response.data && response.data.uuid) {
         await this.clearBasket();

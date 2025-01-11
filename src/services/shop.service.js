@@ -90,11 +90,8 @@ async function CreateOrderFromLocalSource(userid,basket) {
 
 async function CreateOrder(userid, basket) {
     let response = null;
-    console.log('CreateOrder', userid, basket);
-
     try {
         response = await CreateOrderFromLocalSource(userid, basket);
-        console.log('Réponse de CreateOrderFromLocalSource:', response); // Log la réponse obtenue
     } catch (err) {
         console.error('Erreur lors de la création de la commande:', err);
         response = { error: 1, status: 404, data: 'erreur réseau, impossible de créer la commande' };
