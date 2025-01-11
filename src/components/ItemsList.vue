@@ -13,7 +13,7 @@ import CheckedList from "@/components/checkedList.vue";
 export default {
   components: {CheckedList},
   computed: {
-    ...mapState(['viruses']),
+    ...mapState('shop', ['viruses'])
   },
   methods: {
     checkedChanged(index) {

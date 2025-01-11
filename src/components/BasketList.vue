@@ -34,7 +34,7 @@ export default {
     ...mapState('shop', ['basket', 'shopUser']),
   },
   methods: {
-    ...mapActions('shop', ['loadBasket', 'removeItem', 'clearBasket']),
+    ...mapActions('shop', ['getBasket', 'removeItem', 'clearBasket']),
 
     async createOrder() {
       if (!this.shopUser || !this.basket.length) return;
