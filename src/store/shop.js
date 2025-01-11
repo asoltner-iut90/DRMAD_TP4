@@ -1,4 +1,5 @@
 import ShopService from '../services/shop.service'
+import Vue from "vue";
 
 export default {
     namespaced: true,
@@ -22,6 +23,17 @@ export default {
         updateLoginError(state, error){
             state.loginError = error;
         },
+        updateOrderStatus(state, data) {
+            let orderId = data.orderId;
+            let status = data.status;
+            let order = state.shopUser.orders.find(order => order._id === orderId);
+            if (order) {
+                order.status = status;
+            }
+        },
+        updateOrders(state, orders) {
+            Vue.set(state.shopUser,"orders" ,orders);
+        }
     },
 
     actions: {
@@ -99,6 +111,18 @@ export default {
             commit('updateBasket', emptyBasket);
             await ShopService.updateBasket({ id: state.shopUser._id, basket: emptyBasket });
         },
+
+        async updateOrders({commit, state}) {
+            let response = await ShopService.getOrders({userId: state.shopUser._id});
+            if (response.error === 0) {
+                commit('updateOrders', response.data);
+            }
+        },
+
+        async cancelOrder({commit, state}, id) {
+            await ShopService.cancelOrder({userId:state.shopUser._id, orderId:id });
+            await commit('updateOrderStatus',{orderId:id, status:"cancelled"});
+        }
 
     }
 }

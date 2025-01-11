@@ -22,6 +22,8 @@ export default {
         router.push("/shop/login").catch(()=>{})
       }else if(index == 3){
         router.push("/shop/pay").catch(()=>{})
+      }else if(index == 4){
+        router.push("/shop/orders").catch(()=>{})
       }
     }
   },

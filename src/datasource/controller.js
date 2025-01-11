@@ -38,7 +38,7 @@ function shopLogin(data) {
     name: user.name,
     login: user.login,
     email: user.email,
-    session: user.session
+    session: user.session,
   }
   return {error: 0, status: 200, data: u}
 }
@@ -109,6 +109,25 @@ async function createOrder(userId, orderData) {
 
   return { error: 0, data: { uuid: newOrder.uuid } };
 }
+function cancelOrder(data) {
+  let orderId = data.orderId;
+  let userId = data.userId;
+  if(!orderId) return {error: 1, status: 404, data: 'orderId invalid'}
+  if(!userId) return {error: 1, status: 404, data: 'user id invalid'}
+  let user = shopusers.find(e => e._id === userId);
+  if (!user) return {error: 1, status: 404, data: 'user id invalid'}
+  let order = user.orders.find(e => e._id === orderId);
+  order.status = 'cancelled'
+  return {error: 0, status: 200, data: order}
+}
+
+function getOrders(data) {
+  let userId = data.userId;
+  if(!userId) return {error: 1, status: 404, data: 'user id invalid'}
+  let user = shopusers.find(e => e._id === userId);
+  let orders = user.orders;
+  return {error: 0, status: 200, data: orders || []}
+}
 
 
 export default{
@@ -120,5 +139,7 @@ export default{
   getBasket,
   payOrder,
   createOrder,
+  cancelOrder,
+  getOrders,
 }
 

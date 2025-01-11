@@ -36,9 +36,12 @@ export default {
         return;
       }
       this.error = '';
-      router.push("/shop/orders");
+      await router.push("/shop/orders");
     }
   },
+  mounted() {
+    this.currentOrderId = this.$route.params.orderId;
+  }
 }
 
 </script>

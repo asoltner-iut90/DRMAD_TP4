@@ -100,11 +100,34 @@ async function CreateOrder(userid, basket) {
     return response;
 }
 
+async function cancelOrder(data) {
+    let response = null;
+    try{
+        response = await LocalSource.cancelOrder(data)
+    }catch(err) {
+        response = {error:1, status:404, data:"erreur de réseau"}
+    }
+    return response
+}
+
+async function getOrders(data) {
+    let response = null;
+    try {
+        response = await LocalSource.getOrders(data)
+    }
+    catch(err) {
+        response = {error:1, status:404, data:"erreur de réseau"}
+    }
+    return response
+}
+
 export default {
     shopLogin,
     getAllViruses,
     getBasket,
     updateBasket,
     payOrder,
-    CreateOrder
+    CreateOrder,
+    cancelOrder,
+    getOrders,
 }
