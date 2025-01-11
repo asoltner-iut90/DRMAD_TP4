@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar :titles="[ {text: 'Viruses', color: 'red'} , {text: 'Compte bancaire', color: 'white'}, {text:'Login', color:'blue'}]"/>
+    <NavBar :titles="[ {text: 'Viruses', color: 'red'} , {text: 'Compte bancaire', color: 'white'}, {text:'Login', color:'blue'}, {text:'pay', color: 'green'}]"/>
     <img alt="Vue logo" src="./assets/logo.png">
     <h1>Welcome to DrMad app</h1>
 
