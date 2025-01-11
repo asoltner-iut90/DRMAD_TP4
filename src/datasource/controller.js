@@ -13,7 +13,7 @@ function getBasket(data) {
   let id = data.id;
   let user = shopusers.find(e => e._id === id)
   if (!user) return {error: 1, status: 404, data: 'user id invalid'}
-  return {error: 0, status: 200, data: user.orders}
+  return {error: 0, status: 200, data: user.basket}
 
 }
 
@@ -22,8 +22,8 @@ function updateBasket(data) {
   let basket = data.basket;
   let user = shopusers.find(e => e._id === id)
   if (!user) return {error: 1, status: 404, data: 'user id invalid'}
-  user.orders = basket;
-  return {error: 0, status: 200, data: user.orders}
+  user['basket']=basket;
+  return {error: 0, status: 200, data: user.basket}
 }
 
 function shopLogin(data) {
@@ -62,6 +62,7 @@ function getAccountTransactions(number){
   if (!list) return {error: 1, status: 404, data: 'account number invalid'}
   return {error: 0, status: 404, data:list};
 }
+
 
 
 export default{
